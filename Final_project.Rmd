@@ -5,18 +5,83 @@ date: "December 5, 2014"
 output: html_document
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Description:
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+##1. Read-in and Format Data
+Converts multi sheet excel doc to single data-frame with m/z,intensity, and sample name as variables (this is an output of the clinical lab program)
+  -useful because this is the easiest way to output data from clinical lab program  	but very tedious and error prone to copy and paste all of the columns into a new 	sheet, especially if you have 96 samples.
+
 
 ```{r}
-test
-```
+#1. Converts multi sheet excel doc to single data-frame with m/z,intensity, 
+#load XLConnect package to read in Excel files
+library(XLConnect)
 
-You can also embed plots, for example:
+importWorksheets <- function(file) {
+  # filename: name of Excel file
+  workbook <- loadWorkbook(file)
+  sheet_names <- getSheets(workbook)
+  names(sheet_names) <- sheet_names
+  sheet_list <- lapply(sheet_names, function(.sheet){
+    readWorksheet(object=workbook, .sheet)})
+}
+
+#This function converts all of the sheets from an excel file as a single list
+#returns a list called spectra.list containing all sheets in excel file to global enironment
+#returns sheet names so user can create dataframes containing peak lists of interest
+Return.spectra.list<-function(file){
+  spectra.list<-importWorksheets(file)
+  spectra.list<<-as.vector(spectra.list)
+  spectra.names<<-names(spectra.list)
+  return(spectra.names)
+}
+
+#create a dataframe for spectra of interest
+#could try to turn this into a function, 
+#not sure if that would be too hard with data frame naming scheme
+#strain 2398
+#s2398_1.1<-as.data.frame(spectra.list$'2398_1-1_0_A5_1')
+#s2398_1.2<-as.data.frame(spectra.list$'2398_1-2_0_B5_1')
+#s2398_3.1<-as.data.frame(spectra.list$'2398_3-1_0_E5_1')
+#strain 630g
+
+#strain 712
+#strain F200
+#strain R20291
+#strain VPI
+
+#function to format data so that dataframe contains only m/z time and intensity
+#creates a new variable called sample that can be used for merging multiple spectra
+#creates new variable called ribotype where another feature can be added to dataframe
+#takes dataframe and sample name (can be different than dataframe name)
+#as argument and deletes unnecessary info
+
+format.spectra.df<-function(data.frame, sample, ribotype){
+  data.frame<-data.frame[-c(1:2), ]
+  data.frame<-data.frame[ ,-c(4:9) ]
+  names(data.frame)<-NULL
+  colnames(data.frame)<-c("m/z","time",intensity","sample", "ribotype")
+  data.frame$sample<-sample
+  data.frame$ribotype<-ribotype
+  sample<-data.frame
+  write.table(data.frame, file=""sample.txt")
+}
+#problem! want to change name of file!!
+```
+##2.Plots intensity by m/z
 
 ```{r, echo=FALSE}
 plot(cars)
 ```
+##3.Statistics to compare spectra
+Does stats to compare peaks between spectra
+-not sure what best measure(s) is yet…
+```{r}
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```
+##4.Unique Peak Finding Analysis
+```{r}
+
+```
+##5. Bilds Tree 
+based on spectra similarities 
