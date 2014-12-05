@@ -60,12 +60,13 @@ format.spectra.df<-function(data.frame, sample, ribotype){
   data.frame<-data.frame[-c(1:2), ]
   data.frame<-data.frame[ ,-c(4:9) ]
   names(data.frame)<-NULL
-  colnames(data.frame)<-c("m/z","time",intensity","sample", "ribotype")
+  colnames(data.frame)<-c("m/z","time","intensity","sample", "ribotype")
   data.frame$sample<-sample
   data.frame$ribotype<-ribotype
   sample<-data.frame
-  write.table(data.frame, file=""sample.txt")
+  write.table(data.frame, file="sample.txt")
 }
+
 #problem! want to change name of file!!
 ```
 ##2.Plots intensity by m/z
