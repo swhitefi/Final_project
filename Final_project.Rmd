@@ -13,10 +13,11 @@ Converts multi sheet excel doc to single data-frame with m/z,intensity, and samp
 
 
 ```{r}
-#1. Converts multi sheet excel doc to single data-frame with m/z,intensity, 
-#load XLConnect package to read in Excel files
+#first, load all of the packages/libraries you will need to use this package
 library(XLConnect)
 
+#1. Converts multi sheet excel doc to single data-frame with m/z,intensity, 
+#load XLConnect package to read in Excel files
 importWorksheets <- function(file) {
   # filename: name of Excel file
   workbook <- loadWorkbook(file)
@@ -26,21 +27,29 @@ importWorksheets <- function(file) {
     readWorksheet(object=workbook, .sheet)})
 }
 
+importWorksheets("11-20-2014_SEW.xls")
+
 #This function converts all of the sheets from an excel file as a single list
 #returns a list called spectra.list containing all sheets in excel file to global enironment
 #returns sheet names so user can create dataframes containing peak lists of interest
 Return.spectra.list<-function(file){
   spectra.list<-importWorksheets(file)
-  spectra.list<<-as.vector(spectra.list)
+  spectra.list<-as.vector(spectra.list)
   spectra.names<<-names(spectra.list)
   return(spectra.names)
 }
 
+Return.spectra.list("11-20-2014_SEW.xls")
+
 #create a dataframe for spectra of interest
 #could try to turn this into a function, 
+#make.spectra.df<-function(spectra.list, sample) {
+  #paste0"sample"<<-as.data.frame(spectra.list$('sample'))
+  #return("spectra object in global environment")
+#}
 #not sure if that would be too hard with data frame naming scheme
 #strain 2398
-#s2398_1.1<-as.data.frame(spectra.list$'2398_1-1_0_A5_1')
+s2398_1.1<-as.data.frame(spectra.list$'2398_1-1_0_A5_1')
 #s2398_1.2<-as.data.frame(spectra.list$'2398_1-2_0_B5_1')
 #s2398_3.1<-as.data.frame(spectra.list$'2398_3-1_0_E5_1')
 #strain 630g
@@ -51,22 +60,21 @@ Return.spectra.list<-function(file){
 #strain VPI
 
 #function to format data so that dataframe contains only m/z time and intensity
-#creates a new variable called sample that can be used for merging multiple spectra
-#creates new variable called ribotype where another feature can be added to dataframe
 #takes dataframe and sample name (can be different than dataframe name)
 #as argument and deletes unnecessary info
 
 format.spectra.df<-function(data.frame, sample, ribotype){
+  data.frame<-data.frame[ ,-c(4:9)]
   data.frame<-data.frame[-c(1:2), ]
-  data.frame<-data.frame[ ,-c(4:9) ]
   names(data.frame)<-NULL
   colnames(data.frame)<-c("m/z","time","intensity","sample", "ribotype")
   data.frame$sample<-sample
   data.frame$ribotype<-ribotype
-  sample<-data.frame
-  write.table(data.frame, file="sample.txt")
+  write.table(data.frame,file=(paste0(sample, ".txt")))
 }
 
+format.spectra.df(s2398_1.1, "2398_1-1", "027")
+  
 #problem! want to change name of file!!
 ```
 ##2.Plots intensity by m/z
