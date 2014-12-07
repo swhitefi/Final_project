@@ -72,9 +72,9 @@ format.spectra.df<-function(data.frame, sample, ribotype){
   colnames(data.frame)<-c("m/z","time","intensity") #rename
   data.frame$sample<-sample #make put the sample name in the sample column
   data.frame$ribotype<-ribotype #add the ribotype or other feature
-   data.frame$rel.intensity<-(data.frame$intensity/max(data.frame$intensity))
   write.table(data.frame,file=(paste0(sample, ".txt"))) #write this to a txt file in working directory
 }
+
 format.spectra.df(s2398_1.1, "2398_1.1", "027")
 format.spectra.df(s2398_1.2, "2398_1.2", "027")
 format.spectra.df(s2398_3.1, "2398_3.1", "027")
@@ -86,14 +86,16 @@ s2398_1.1<-read.table(file="2398_1-1.txt", header=T)
 s2398_1.2<-read.table(file="2398_1-1.txt", header=T)
 s2398_3.1<-read.table(file="2398_1-1.txt", header=T)
 
-#add relative intensity
-
-s2398_1.1$rel.intens<-(s2398_1.1$intensity/13075)
+#add relative intensity to dataframe
+#data.frame$rel.intensity<-(data.frame$intensity/(max(data.frame$intensity)))
+s2398_1.1$rel.intensity<-s2398_1.1$intensity/max(s2398_1.1$intensity)
+s2398_1.2$rel.intensity<-s2398_1.1$intensity/max(s2398_1.2$intensity)
+s2398_3.1$rel.intensity<-s2398_1.1$intensity/max(s2398_3.1$intensity)
 ```
 ##2.Plots intensity by m/z
 
 ```{r}
-plot(s2398_1.1$)
+plot(s2398_1.1$rel.intensity~s2398_1.1$m.z, type="l", main="Relative Intensity by M/Z", xlab="M/Z", ylab="Relative Intensity" , xlim=c(2000,13000), ylim=c(0,1))
 
 
 ```
