@@ -43,15 +43,17 @@ Return.spectra.list("11-20-2014_SEW.xls")
 
 #create a dataframe for spectra of interest
 #could try to turn this into a function, 
-#make.spectra.df<-function(spectra.list, sample) {
-  #paste0"sample"<<-as.data.frame(spectra.list$('sample'))
-  #return("spectra object in global environment")
+#make.spectra.df<-function(list, sample) {
+  #paste("label")
+  #test<<-as.data.frame(list$'sample')
+  #return(paste(label))
+ # return(test)
 #}
 #not sure if that would be too hard with data frame naming scheme
 #strain 2398
 s2398_1.1<-as.data.frame(spectra.list$'2398_1-1_0_A5_1')
-#s2398_1.2<-as.data.frame(spectra.list$'2398_1-2_0_B5_1')
-#s2398_3.1<-as.data.frame(spectra.list$'2398_3-1_0_E5_1')
+s2398_1.2<-as.data.frame(spectra.list$'2398_1-2_0_B5_1')
+s2398_3.1<-as.data.frame(spectra.list$'2398_3-1_0_E5_1')
 #strain 630g
 
 #strain 712
@@ -64,23 +66,36 @@ s2398_1.1<-as.data.frame(spectra.list$'2398_1-1_0_A5_1')
 #as argument and deletes unnecessary info
 
 format.spectra.df<-function(data.frame, sample, ribotype){
-  data.frame<-data.frame[ ,-c(4:9)]
-  data.frame<-data.frame[-c(1:2), ]
-  names(data.frame)<-NULL
-  colnames(data.frame)<-c("m/z","time","intensity","sample", "ribotype")
-  data.frame$sample<-sample
-  data.frame$ribotype<-ribotype
-  write.table(data.frame,file=(paste0(sample, ".txt")))
+  data.frame<-data.frame[ ,-c(4:9)] #remove columns that aren't needed
+  data.frame<-data.frame[-c(1:2), ] #remove rows that aren't needed
+  names(data.frame)<-NULL #delete the variable names since they are wrong
+  colnames(data.frame)<-c("m/z","time","intensity") #rename
+  data.frame$sample<-sample #make put the sample name in the sample column
+  data.frame$ribotype<-ribotype #add the ribotype or other feature
+   data.frame$rel.intensity<-(data.frame$intensity/max(data.frame$intensity))
+  write.table(data.frame,file=(paste0(sample, ".txt"))) #write this to a txt file in working directory
 }
+format.spectra.df(s2398_1.1, "2398_1.1", "027")
+format.spectra.df(s2398_1.2, "2398_1.2", "027")
+format.spectra.df(s2398_3.1, "2398_3.1", "027")
 
-format.spectra.df(s2398_1.1, "2398_1-1", "027")
-  
-#problem! want to change name of file!!
+#now you should have a separate txt file for each sample that you want to look at
+
+#bring samples back in 
+s2398_1.1<-read.table(file="2398_1-1.txt", header=T)
+s2398_1.2<-read.table(file="2398_1-1.txt", header=T)
+s2398_3.1<-read.table(file="2398_1-1.txt", header=T)
+
+#add relative intensity
+
+s2398_1.1$rel.intens<-(s2398_1.1$intensity/13075)
 ```
 ##2.Plots intensity by m/z
 
-```{r, echo=FALSE}
-plot(cars)
+```{r}
+plot(s2398_1.1$)
+
+
 ```
 ##3.Statistics to compare spectra
 Does stats to compare peaks between spectra
