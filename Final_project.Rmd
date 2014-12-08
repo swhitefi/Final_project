@@ -8,9 +8,8 @@ output: html_document
 Description:
 
 ##1. Read-in and Format Data
-Converts multi sheet excel doc to single data-frame with m/z,intensity, and sample name as variables (this is an output of the clinical lab program)
-  -useful because this is the easiest way to output data from clinical lab program  	but very tedious and error prone to copy and paste all of the columns into a new 	sheet, especially if you have 96 samples.
-
+Converts multi sheet excel document to single data-frame with m/z,intensity, and sample name as variables. The multi-sheet excel document is the easiest and fastest way to export spectra data from the Flex Analysis program in the clinical lab. 
+These read-in and data-formatting functions are useful because they are much faster than copying-and pasting columns into new spreadsheets, and this method is less error prone. These are good qualities, especially if you have a target plate with 96 samples. 
 
 ```{r}
 #first, load all of the packages/libraries you will need to use this package
