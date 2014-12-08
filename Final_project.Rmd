@@ -8,13 +8,16 @@ output: html_document
 Description:
 
 ##1. Read-in and Format Data
-Converts multi sheet excel document to single data-frame with m/z,intensity, and sample name as variables. The multi-sheet excel document is the easiest and fastest way to export spectra data from the Flex Analysis program in the clinical lab. 
+Converts multi sheet excel document to single data-frame with m/z,intensity,relative intensity, and sample names and ribotype (or another feature) as variables. The multi-sheet excel document is the easiest and fastest way to export spectra data from the Flex Analysis program in the clinical lab. 
 These read-in and data-formatting functions are useful because they are much faster than copying-and pasting columns into new spreadsheets, and this method is less error prone. These are good qualities, especially if you have a target plate with 96 samples. 
 
 ```{r}
 #first, load all of the packages/libraries you will need to use this package
 library(XLConnect)
 
+```
+First read-in multi-sheet excel document
+```{r}
 #1. Converts multi sheet excel doc to single data-frame with m/z,intensity, 
 #load XLConnect package to read in Excel files
 importWorksheets <- function(file) {
@@ -25,9 +28,11 @@ importWorksheets <- function(file) {
   sheet_list <- lapply(sheet_names, function(.sheet){
     readWorksheet(object=workbook, .sheet)})
 }
-
+###
 importWorksheets("11-20-2014_SEW.xls")
-
+```
+Next, convert all of the sheets from the Excel document into a single list containing all of the spectra from each sample (Excel workbook sheet) as an element of the list. This function returns the list containing spectra called spectra.list to the global environment. It also returns a list of the samples (Excel worksheet headings) that can be referenced for labling and creating dataframes later.
+```{r}
 #This function converts all of the sheets from an excel file as a single list
 #returns a list called spectra.list containing all sheets in excel file to global enironment
 #returns sheet names so user can create dataframes containing peak lists of interest
@@ -37,8 +42,13 @@ Return.spectra.list<-function(file){
   spectra.names<<-names(spectra.list)
   return(spectra.names)
 }
-
+###
 Return.spectra.list("11-20-2014_SEW.xls")
+```
+The next step is to create dataframes for the spectra that you are interested in.
+
+```{r}
+# example code, not in a function
 
 #create dataframes for spectra of interest
 #could try to turn this into a function, 
@@ -59,6 +69,10 @@ s2398_3.1<-as.data.frame(spectra.list$'2398_3-1_0_E5_1')
 #strain R20291
 #strain VPI
 
+```
+Then you will want to format your dataframe to eliminate empty rows and columns from the Excel sheet. This function takes a dataframe and sample name as arguments and deletes unnecessary rows and columns.
+
+```{r}
 #function to format data so that dataframe contains only m/z time and intensity
 #takes dataframe and sample name (can be different than dataframe name)
 #as argument and deletes unnecessary info
@@ -76,43 +90,27 @@ format.spectra.df<-function(data.frame, sample, ribotype){
 format.spectra.df(s2398_1.1, "2398_1.1", "027")
 format.spectra.df(s2398_1.2, "2398_1.2", "027")
 format.spectra.df(s2398_3.1, "2398_3.1", "027")
-
-#now you should have a separate txt file for each sample that you want to look at
-
+```
+Now you should have a separate txt file in your working directory for each sample that you want to look at. The next step is to bring the files back in as dataframes. 
+```{r}
+#not in a function
 #bring samples back in 
 s2398_1.1<-read.table(file="2398_1.1.txt", header=T)
 s2398_1.2<-read.table(file="2398_1.2.txt", header=T)
 s2398_3.1<-read.table(file="2398_3.1.txt", header=T)
-
-#add relative intensity to dataframe
-relative.intens<-function(df){
-  df$relative.intensity<-df$intensity/max(df$intensity)
-  df<<-df
-  return(df)
-}
-#test
-rel.intens(s2398_1.1)
-s2398_1.1<-s2398_1.1[ ,-c(4:5)]
-#data.frame$rel.intensity<-(data.frame$intensity/(max(data.frame$intensity)))
-s2398_1.1$rel.intensity<-s2398_1.1$intensity/max(s2398_1.1$intensity)
-s2398_1.2$rel.intensity<-s2398_1.2$intensity/max(s2398_1.2$intensity)
-s2398_3.1$rel.intensity<-s2398_3.1$intensity/max(s2398_3.1$intensity)
 ```
-##2.Plots intensity by m/z
-
+Congrats! Your dataframes are now formatted in a way that makes sense, and the data are ready for you to make plots and run statistics. 
 ```{r}
 
-plot.spectra<-function(dataframe) {
-  y<-(paste0(dataframe, "$rel.intensity"))
-  x<-(paste0(dataframe, "$m.z"))   
-  plot(x,y, main="Relative Intensity by M/Z", xlab="M/Z", ylab=(paste0(sample,"Relative Intensity" , xlim=c(2000,13000), ylim=c(0,1))))
+```
+##2.Plots intensity by m/z
+These functions can be used to quickly plot your spectra to get a rough idea of what your data looks like. 
+```{r}
+plot.spectra<-function(df){
+plot(df$rel.intensity~df$m.z, type="l", main="Relative Intensity by M/Z", xlab="M/Z", ylab="Relative Intensity" , xlim=c(2000,13000), ylim=c(0,1),col=rainbow(30))
 }
-
-plot.spectra(s2398_1.1)
-
-plot(s2398_1.1$rel.intensity~s2398_1.1$m.z, type="l", main="Relative Intensity by M/Z", xlab="M/Z", ylab="Relative Intensity" , xlim=c(2000,13000), ylim=c(0,1))
-
-
+##
+plot.spectra(s2398_1.2)
 ```
 ##3.Statistics to compare spectra
 Does stats to compare peaks between spectra
