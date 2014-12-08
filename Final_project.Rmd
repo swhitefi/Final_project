@@ -40,15 +40,14 @@ Return.spectra.list<-function(file){
 
 Return.spectra.list("11-20-2014_SEW.xls")
 
-#create a dataframe for spectra of interest
+#create dataframes for spectra of interest
 #could try to turn this into a function, 
 #make.spectra.df<-function(list, sample) {
-  #paste("label")
-  #test<<-as.data.frame(list$'sample')
-  #return(paste(label))
- # return(test)
-#}
+  #list<<-as.data.frame(list$(paste('sample')))
+ # }
+
 #not sure if that would be too hard with data frame naming scheme
+#examples of how to do it manually w/out function
 #strain 2398
 s2398_1.1<-as.data.frame(spectra.list$'2398_1-1_0_A5_1')
 s2398_1.2<-as.data.frame(spectra.list$'2398_1-2_0_B5_1')
@@ -65,10 +64,10 @@ s2398_3.1<-as.data.frame(spectra.list$'2398_3-1_0_E5_1')
 #as argument and deletes unnecessary info
 
 format.spectra.df<-function(data.frame, sample, ribotype){
-  data.frame<-data.frame[ ,-c(4:9)] #remove columns that aren't needed
+  data.frame<-data.frame[ ,-c(4:7,9:11)] #remove columns that aren't needed
   data.frame<-data.frame[-c(1:2), ] #remove rows that aren't needed
   names(data.frame)<-NULL #delete the variable names since they are wrong
-  colnames(data.frame)<-c("m/z","time","intensity") #rename
+  colnames(data.frame)<-c("m/z","time","intensity","rel.intensity") #rename
   data.frame$sample<-sample #make put the sample name in the sample column
   data.frame$ribotype<-ribotype #add the ribotype or other feature
   write.table(data.frame,file=(paste0(sample, ".txt"))) #write this to a txt file in working directory
@@ -86,6 +85,14 @@ s2398_1.2<-read.table(file="2398_1.2.txt", header=T)
 s2398_3.1<-read.table(file="2398_3.1.txt", header=T)
 
 #add relative intensity to dataframe
+relative.intens<-function(df){
+  df$relative.intensity<-df$intensity/max(df$intensity)
+  df<<-df
+  return(df)
+}
+#test
+rel.intens(s2398_1.1)
+s2398_1.1<-s2398_1.1[ ,-c(4:5)]
 #data.frame$rel.intensity<-(data.frame$intensity/(max(data.frame$intensity)))
 s2398_1.1$rel.intensity<-s2398_1.1$intensity/max(s2398_1.1$intensity)
 s2398_1.2$rel.intensity<-s2398_1.2$intensity/max(s2398_1.2$intensity)
