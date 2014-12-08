@@ -45,7 +45,7 @@ Return.spectra.list<-function(file){
 ###
 Return.spectra.list("11-20-2014_SEW.xls")
 ```
-The next step is to create dataframes for the spectra that you are interested in.
+The next step is to create dataframes for the spectra that you are interested in. The names are returned for your convenience in labeling your files
 
 ```{r}
 # example code, not in a function
@@ -63,12 +63,37 @@ s2398_1.1<-as.data.frame(spectra.list$'2398_1-1_0_A5_1')
 s2398_1.2<-as.data.frame(spectra.list$'2398_1-2_0_B5_1')
 s2398_3.1<-as.data.frame(spectra.list$'2398_3-1_0_E5_1')
 #strain 630g
-
-#strain 712
-#strain F200
-#strain R20291
+s630_1.1<-as.data.frame(spectra.list$'630_1-1_0_A6_1')
+s630_2.1<-as.data.frame(spectra.list$'630_2-1_0_C6_1')
+s630_2.2<-as.data.frame(spectra.list$'630_2-2_0_D6_1')
+s630_3.1<-as.data.frame(spectra.list$'630_3-1_0_E6_1')
+s630_3.2<-as.data.frame(spectra.list$'630_3-2_0_F6_1')
 #strain VPI
+VPI_1.1<-as.data.frame(spectra.list$'VPI_1-1_0_A2_1')
+VPI_1.2<-as.data.frame(spectra.list$'VPI_1-2_0_B2_1')
+VPI_2.1<-as.data.frame(spectra.list$'VPI_2-1_0_C2_1')
+VPI_2.2<-as.data.frame(spectra.list$'VPI_2-2_0_D2_1')
+VPI_3.1<-as.data.frame(spectra.list$'VPI_3-1_0_E2_1')
+VPI_3.2<-as.data.frame(spectra.list$'VPI_3-2_0_F2_1')
+#strain F200
+F200_1.1<-as.data.frame(spectra.list$'F200_1-1_0_A1_1')
+F200_1.2<-as.data.frame(spectra.list$'F2001-2_0_B1_1')
+F200_2.1<-as.data.frame(spectra.list$'F200_2-1_0_C1_1')
+F200_2.2<-as.data.frame(spectra.list$'F200_2-2_0_D1_1')
+F200_3.1<-as.data.frame(spectra.list$'F200_3-1_0_E1_1')
+F200_3.2<-as.data.frame(spectra.list$'F200_3-2_0_F1_1')
+#strain R20291
+R20291_2.1<-as.data.frame(spectra.list$'R20291_2-1_0_C3_1')
+R20291_2.2<-as.data.frame(spectra.list$'R20291_2-2_0_D3_1')
+#strain 712
+s712_1.1<-as.data.frame(spectra.list$'712_1-1_0_A4_1')
+s712_1.2<-as.data.frame(spectra.list$'712_1-2_0_B4_1')
+s712_2.1<-as.data.frame(spectra.list$'712_2-1_0_C4_1')
+s712_2.2<-as.data.frame(spectra.list$'712_2-2_0_D4_1')
+s712_3.1<-as.data.frame(spectra.list$'712_3-1_0_E4_1')
+s712_3.2<-as.data.frame(spectra.list$'712_3-2_0_F4_1')
 
+  
 ```
 Then you will want to format your dataframe to eliminate empty rows and columns from the Excel sheet. This function takes a dataframe and sample name as arguments and deletes unnecessary rows and columns.
 
@@ -87,9 +112,40 @@ format.spectra.df<-function(data.frame, sample, ribotype){
   write.table(data.frame,file=(paste0(sample, ".txt"))) #write this to a txt file in working directory
 }
 ####
-format.spectra.df(s2398_1.1, "2398_1.1", "027")
-format.spectra.df(s2398_1.2, "2398_1.2", "027")
-format.spectra.df(s2398_3.1, "2398_3.1", "027")
+#strain 2398
+format.spectra.df(s2398_1.1, "s2398_1.1", "027")
+format.spectra.df(s2398_1.2, "s2398_1.2", "027")
+format.spectra.df(s2398_3.1, "s2398_3.1", "027")
+#strain 630g
+format.spectra.df(s630_1.1,"s630_1.1", "012")
+format.spectra.df(s630_2.1,"s630_2.1", "012")
+format.spectra.df(s630_2.2,"s630_2.2", "012")
+format.spectra.df(s630_3.1,"s630_3.1", "012")
+format.spectra.df(s630_3.2,"s630_3.2", "012")
+#strain VPI
+format.spectra.df(VPI_1.1, "VPI_1.1", "003")
+format.spectra.df(VPI_1.2, "VPI_1.2", "003")
+format.spectra.df(VPI_2.1, "VPI_2.1", "003")
+format.spectra.df(VPI_2.2, "VPI_2.2", "003")
+format.spectra.df(VPI_3.1, "VPI_3.1", "003")
+format.spectra.df(VPI_3.2, "VPI_3.2", "003")
+#strain F200
+format.spectra.df(F200_1.1, "F200_1.1", "UM12")
+format.spectra.df(F200_1.2, "F200_1.2", "UM12")
+format.spectra.df(F200_2.1, "F200_2.1", "UM12")
+format.spectra.df(F200_2.2, "F200_2.2", "UM12")
+format.spectra.df(F200_3.1, "F200_3.1", "UM12")
+format.spectra.df(F200_3.2, "F200_3.2", "UM12")
+#strain R20291
+format.spectra.df(R20291_2.1, "R20291_2.1", "027")
+format.spectra.df(R20291_2.2, "R20291_2.2", "027")
+#strain 712
+format.spectra.df(s712_1.1, "s712_1.1", "003")
+format.spectra.df(s712_1.2, "s712_1.2", "003")
+format.spectra.df(s712_2.1, "s712_2.1", "003")
+format.spectra.df(s712_2.2, "s712_2.2", "003")
+format.spectra.df(s712_3.1, "s712_3.1", "003")
+format.spectra.df(s712_3.2, "s712_3.2", "003")
 ```
 Now you should have a separate txt file in your working directory for each sample that you want to look at. The next step is to bring the files back in as dataframes. 
 ```{r}
@@ -98,6 +154,49 @@ Now you should have a separate txt file in your working directory for each sampl
 s2398_1.1<-read.table(file="2398_1.1.txt", header=T)
 s2398_1.2<-read.table(file="2398_1.2.txt", header=T)
 s2398_3.1<-read.table(file="2398_3.1.txt", header=T)
+
+#strain 2398
+s2398_1.1<-read.table(file="s2398_1.1.txt", header=T)
+s2398_1.2<-read.table(file="s2398_1.2.txt", header=T)
+s2398_3.1<-read.table(file="s2398_3.1.txt", header=T)
+
+#strain 630g
+s630_1.1<-read.table(file="s630_1.1.txt", header=T)
+s630_2.1<-read.table(file="s630_2.1.txt", header=T)
+s630_2.2<-read.table(file="s630_2.2.txt", header=T)
+s630_3.1<-read.table(file="s630_3.1.txt", header=T)
+s630_3.2<-read.table(file="s630_3.2.txt", header=T)
+
+#strain VPI
+VPI_1.1<-read.table(file="VPI_1.1.txt", header=T)
+VPI_1.2<-read.table(file="VPI_1.2.txt", header=T)
+VPI_2.1<-read.table(file="VPI_2.1.txt", header=T)
+VPI_2.2<-read.table(file="VPI_2.2.txt", header=T)
+VPI_3.1<-read.table(file="VPI_3.1.txt", header=T)
+VPI_3.2<-read.table(file="VPI_3.2.txt", header=T)
+
+#strain F200
+F200_1.1<-read.table(file="F200_1.1.txt", header=T)
+F200_1.2<-read.table(file="F200_1.2.txt", header=T)
+F200_2.1<-read.table(file="F200_2.1.txt", header=T)
+F200_2.2<-read.table(file="F200_2.2.txt", header=T)
+F200_3.1<-read.table(file="F200_3.1.txt", header=T)
+F200_3.2<-read.table(file="F200_3.2.txt", header=T)
+
+#strain R20291
+R20291_2.1<-read.table(file="F200_2.1.txt", header=T)
+R20291_2.2<-read.table(file="F200_2.2.txt", header=T)
+
+
+#strain 712
+s712_1.1<-read.table(file="s712_1.1.txt", header=T)
+s712_1.2<-read.table(file="s712_1.2.txt", header=T)
+s712_2.1<-read.table(file="s712_2.1.txt", header=T)
+s712_2.2<-read.table(file="s712_2.2.txt", header=T)
+s712_3.1<-read.table(file="s712_3.1.txt", header=T)
+s712_3.2<-read.table(file="s712_3.2.txt", header=T)
+
+
 ```
 Congrats! Your dataframes are now formatted in a way that makes sense, and the data are ready for you to make plots and run statistics. 
 ```{r}
@@ -111,6 +210,21 @@ plot(df$rel.intensity~df$m.z, type="l", main="Relative Intensity by M/Z", xlab="
 }
 ##
 plot.spectra(s2398_1.2)
+#overlay other 027s
+#2398
+lines(s2398_1.1$rel.intensity~s2398_1.1$m.z, type="l", col="red")
+lines(s2398_3.1$rel.intensity~s2398_3.1$m.z, type="l", col="red")
+#R20291
+
+#overlay F200 non-tox strain
+lines(F200_1.1$rel.intensity~F200_1.1$m.z, type="l", col="green")
+lines(F200_1.2$rel.intensity~F200_1.2$m.z, type="l", col="green")
+lines(F200_2.1$rel.intensity~F200_2.1$m.z, type="l", col="dark green")
+lines(F200_2.2$rel.intensity~F200_2.2$m.z, type="l", col="dark green")
+lines(F200_3.1$rel.intensity~F200_3.1$m.z, type="l", col="light green")
+lines(F200_3.2$rel.intensity~F200_3.2$m.z, type="l", col="light green")
+
+
 ```
 ##3.Statistics to compare spectra
 Does stats to compare peaks between spectra
@@ -126,21 +240,21 @@ Does stats to compare peaks between spectra
 
 ```{r}
 #going to need to convert to wide format to have each value of variable (m/z) as a column, and samples as a row.
-s2398_1.1$count<-c(1:51)
-test<-subset(s2398_1.1, select=c("m.z","count"))
-fix.shape<-reshape(test, timevar="count", idvar=c("m.z"), direction="wide")
+#s2398_1.1$count<-c(1:51)
+#test<-subset(s2398_1.1, select=c("m.z","count"))
+#fix.shape<-reshape(test, timevar="count", idvar=c("m.z"), direction="wide")
 
 #then the tree will make sense
 #test tree
 #first combine dataframes
-three.spectra<-rbind(s2398_1.1$, s2398_1.2,s2398_3.1)
+#three.spectra<-rbind(s2398_1.1$, s2398_1.2,s2398_3.1)
 #put them into wide format
-three.spectra<-
+#three.spectra<-
 # prepare hierarchical cluster
-hc = hclust(dist(three.spectra$m.z), "ave")
+#hc = hclust(dist(three.spectra$m.z), "ave")
 # very simple dendrogram
-plot(hc)
-hc = hclust(dist(s2398_1.1$m.z), "ave")
-plot(hc)
+#plot(hc)
+#hc = hclust(dist(s2398_1.1$m.z), "ave")
+#plot(hc)
 ```
 
