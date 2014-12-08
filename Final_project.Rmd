@@ -58,6 +58,8 @@ The next step is to create dataframes for the spectra that you are interested in
 
 #not sure if that would be too hard with data frame naming scheme
 #examples of how to do it manually w/out function
+#control BTS
+BTS<-as.data.frame(spectra.list$'BTS_0_A9_1')
 #strain 2398
 s2398_1.1<-as.data.frame(spectra.list$'2398_1-1_0_A5_1')
 s2398_1.2<-as.data.frame(spectra.list$'2398_1-2_0_B5_1')
@@ -112,6 +114,8 @@ format.spectra.df<-function(data.frame, sample, ribotype){
   write.table(data.frame,file=(paste0(sample, ".txt"))) #write this to a txt file in working directory
 }
 ####
+#BTS control
+format.spectra.df(BTS, "BTS", "BTS")
 #strain 2398
 format.spectra.df(s2398_1.1, "s2398_1.1", "027")
 format.spectra.df(s2398_1.2, "s2398_1.2", "027")
@@ -150,10 +154,10 @@ format.spectra.df(s712_3.2, "s712_3.2", "003")
 Now you should have a separate txt file in your working directory for each sample that you want to look at. The next step is to bring the files back in as dataframes. 
 ```{r}
 #not in a function
+
 #bring samples back in 
-s2398_1.1<-read.table(file="2398_1.1.txt", header=T)
-s2398_1.2<-read.table(file="2398_1.2.txt", header=T)
-s2398_3.1<-read.table(file="2398_3.1.txt", header=T)
+#BTS control
+BTS<-read.table(file="BTS.txt", header=T)
 
 #strain 2398
 s2398_1.1<-read.table(file="s2398_1.1.txt", header=T)
@@ -204,11 +208,16 @@ Congrats! Your dataframes are now formatted in a way that makes sense, and the d
 ```
 ##2.Plots intensity by m/z
 These functions can be used to quickly plot your spectra to get a rough idea of what your data looks like. 
+plot.spectra offers a pre-formatted m/z by relative intensity plot. It is usefull to be able to see your data quickly.
 ```{r}
+
 plot.spectra<-function(df){
-plot(df$rel.intensity~df$m.z, type="l", main="Relative Intensity by M/Z", xlab="M/Z", ylab="Relative Intensity" , xlim=c(2000,13000), ylim=c(0,1),col=rainbow(30))
+plot(df$rel.intensity~df$m.z, type="l", main="Relative Intensity by M/Z", xlab="M/Z", ylab="Relative Intensity" , xlim=c(2000,13000), ylim=c(0,1),col="black")
 }
-##
+
+
+#####
+plot.spectra(BTS)
 plot.spectra(s2398_1.2)
 #overlay other 027s
 #2398
