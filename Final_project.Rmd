@@ -15,6 +15,8 @@ These read-in and data-formatting functions are useful because they are much fas
 #first, load all of the packages/libraries you will need to use this package
 library(XLConnect)
 library(MALDIquant)
+library(MALDIquantForeign)
+
 
 ```
 First read-in multi-sheet excel document
@@ -274,7 +276,7 @@ lines(VPI_3.2$rel.intensity~VPI_3.2$m.z, type="l", col="purple")
 Does stats to compare peaks between spectra
 -not sure what best measure(s) is yet…
 ```{r}
-#if intensity is useful then I would expect to see a difference in the correlation between mass and charge ratios and intensity between different samples
+
 
 
 
