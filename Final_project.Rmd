@@ -206,7 +206,7 @@ Congrats! Your dataframes are now formatted in a way that makes sense, and the d
 code below
 ```{r}
 #merge all dataframes to one big dataframe with the variables of interest
-all.spectra.df<-rbind(#your.data.frames.here)
+all.spectra.df<-rbind()
 
 #####
 all.spectra<-rbind(s2398_1.1 , s2398_1.2 , s2398_3.1 , s630_1.1 , s630_2.1 , s630_2.2 , s630_3.1 , s630_3.2 , VPI_1.1 , VPI_1.2 , VPI_2.1 , VPI_2.2 , VPI_3.1, VPI_3.2 , F200_1.1 , F200_1.2 , F200_2.1 , F200_2.2 , F200_3.1 , F200_3.2 , R20291_2.1 , R20291_2.2 , s712_1.1 , s712_1.2 , s712_2.1 , s712_2.2 , s712_3.1, s712_3.2)
@@ -216,13 +216,13 @@ all.spectra<-rbind(s2398_1.1 , s2398_1.2 , s2398_3.1 , s630_1.1 , s630_2.1 , s63
 These functions can be used to quickly plot your spectra to get a rough idea of what your data looks like. 
 plot.spectra.rel.intens offers a pre-formatted m/z by relative intensity plot. Plot.spectra.intens similarly returns a pre-formatted m/z by intensity plot. These functions are usefull to see your data quickly.
 
-```{r}
+```{r} 
 
-plot.spectra.rel.intens<-function(df){
+plot.spectra.rel.intens<-function(df=data.frame) {
 plot(df$rel.intensity~df$m.z, type="l", main="Relative Intensity by M/Z", xlab="M/Z", ylab="Relative Intensity" , xlim=c(2000,13000), ylim=c(0,1),col="black")
 }
 
-Plot.spectra.intens<-function(df){
+Plot.spectra.intens<-function(df=data.frame) {
 plot(df$intensity~df$m.z, type="l", main="Intensity by M/Z", xlab="M/Z", ylab="Intensity" , xlim=c(2000,13000), ylim=c(0,15000),col="black")
 }
 
@@ -268,8 +268,6 @@ lines(VPI_2.1$rel.intensity~VPI_2.1$m.z, type="l", col="purple")
 lines(VPI_2.2$rel.intensity~VPI_2.2$m.z, type="l", col="purple")
 lines(VPI_3.1$rel.intensity~VPI_3.1$m.z, type="l", col="purple")
 lines(VPI_3.2$rel.intensity~VPI_3.2$m.z, type="l", col="purple")
-
-
 
 ```
 ##3.Statistics to compare spectra
