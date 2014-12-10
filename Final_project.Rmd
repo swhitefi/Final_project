@@ -8,7 +8,7 @@ Description: This package is designed to be used to format MALDI-TOF mass spectr
 
 Utility: A multi-sheet Excel document is an easy and fast way to export MALDI-TOF data from multiple samples once the raw spectra are loaded into the Flex Analysis program.
 
-The FormatMALDI Pipeline:
+###The FormatMALDI Pipeline: image: ![](path/to/smallorb.png)
 
 ##1. Read-in and Format Data
 Converts multi sheet excel document to single data-frame with m/z,intensity,relative intensity, and sample names and ribotype (or another feature) as variables. The multi-sheet excel document is the easiest and fastest way to export spectra data from the Flex Analysis program in the clinical lab. 
@@ -16,12 +16,15 @@ These read-in and data-formatting functions are useful because they are much fas
 
 ```{r}
 #first, load all of the packages/libraries you will need to use this package
+install.packages("MALDIquant")
+install.packages("XLConnect")
+install.packages("MALDIquantForeign")
 library(XLConnect)
 library(MALDIquant)
 library(MALDIquantForeign)
 
 ```
-First read-in multi-sheet excel document
+First read-in your multi-sheet excel document:
 ```{r}
 #1. Converts multi sheet excel doc to single data-frame with m/z,intensity, 
 #load XLConnect package to read in Excel files
@@ -61,7 +64,7 @@ The next step is to create dataframes for the spectra that you are interested in
 ```
 Once you have a dataframe containig your spectra, you will want to format your dataframe to eliminate empty rows and columns that were carried over from the Excel sheet. This function takes a dataframe, sample name, and another feature as arguments and deletes unnecessary rows and columns.
 
-The feature argument is used to apply another variable to your dataframe, and assign all of the rows the same value for that feature.  For example in a study of Clostridium difficile, you may want add the strain ribotype to your dataframe. You can change the variable name of the feature in later steps using base R. 
+The feature argument is used to apply another variable to your dataframe, and assign all of the rows the same value for that feature.  For example in a study of *Clostridium difficile* you may want add the strain ribotype to your dataframe. You can change the variable name of the feature in later steps using base R. 
 ```{r}
 #function to format data so that dataframe contains only m/z time and intensity
 #takes dataframe and sample name (can be different than dataframe name)
@@ -89,13 +92,31 @@ Now you will have a separate .txt file in your working directory for each sample
 BTS<-read.table(file="BTS.txt", header=T)
 
 ```
-Congrats! Your dataframes are now formatted in a way that makes sense, and the data are ready for you to make plots and/or run statistics. If you would like to combine all of your spectra data frames into a single dataframe, you can use the following code below
+If you would like to combine all of your spectra data frames into a single dataframe, you can use the following code below
 ```{r}
 #merge all dataframes to one big dataframe with the variables of interest
 #example code:
 #  example.data.frame.name.all.spectra.df<-rbind(data.frame.names)
+```
+Congrats! Your dataframes are now formatted in a way that makes sense, and the data are ready for you to make plots and/or run statistics. However, if you exported your data from Flex Analysis without background subtraction, you will want to go to step 2. below to perform background subtraction manually before
+analyzing your data.  
+
+
+##2.Background subtract noise from raw spectra data
+The first step in analyzing MALDI-TOF raw spectra data is to distinguish the
+signal from the noise in the mass spec. readings.
+
+
+```{r}
+#background subtraction!!
+#import txt files
+require(MALDIquantForeign)
+s<-importTxt("BTS.txt")
+b<-removeBaseline(s, method="SNIP")
+plot(s)
 
 ```
+
 ##3.Plots intensity by m/z
 These two functions can be used to quickly plot your spectra to get a rough idea of what your data looks like. 
 plot.spectra.rel.intens offers a pre-formatted m/z by relative intensity plot. Plot.spectra.intens similarly returns a pre-formatted m/z by intensity plot. 
@@ -112,41 +133,3 @@ plot(df$intensity~df$m.z, type="l", main="Intensity by M/Z", xlab="M/Z", ylab="I
 }
 
 ```
-##3.Background subtract noise from raw spectra data
-The first step in analyzing MALDI-TOF raw spectra data is to distinguish the
-signal from the noise in the mass spec. readings.
-```{r}
-test<-import("2309_3.1.txt")
-
-
-
-```
-##4.Unique Peak Finding Analysis
-```{r}
-
-
- 
-
-```
-##5. Bilds Tree 
-
-```{r}
-#going to need to convert to wide format to have each value of variable (m/z) as a column, and samples as a row.
-#s2398_1.1$count<-c(1:51)
-#test<-subset(s2398_1.1, select=c("m.z","count"))
-#fix.shape<-reshape(test, timevar="count", idvar=c("m.z"), direction="wide")
-
-#then the tree will make sense
-#test tree
-#first combine dataframes
-#three.spectra<-rbind(s2398_1.1$, s2398_1.2,s2398_3.1)
-#put them into wide format
-#three.spectra<-
-# prepare hierarchical cluster
-#hc = hclust(dist(three.spectra$m.z), "ave")
-# very simple dendrogram
-#plot(hc)
-#hc = hclust(dist(s2398_1.1$m.z), "ave")
-#plot(hc)
-```
-
