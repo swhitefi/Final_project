@@ -1,11 +1,14 @@
 ---
-title: "Final_Project"
-author: "shawn"
+title: "Final_Project: Introducing the FormatMALDI Package"
+author: "Shawn Whitefield"
 date: "December 5, 2014"
 output: html_document
 ---
+Description: This package is designed to be used to format MALDI-TOF mass spectrometry data such that it is ready for statistical analysis in R. FormatMALDI provides a pipeline to take data that is measured on the Bruker Microflex machine and is exported from the Flex Analysis software (Bruker Daltonics) as a multi-sheet Microsoft Excel (.xls) document.  
 
-Description:
+Utility: A multi-sheet Excel document is an easy and fast way to export MALDI-TOF data from multiple samples once the raw spectra are loaded into the Flex Analysis program.
+
+The FormatMALDI Pipeline:
 
 ##1. Read-in and Format Data
 Converts multi sheet excel document to single data-frame with m/z,intensity,relative intensity, and sample names and ribotype (or another feature) as variables. The multi-sheet excel document is the easiest and fastest way to export spectra data from the Flex Analysis program in the clinical lab. 
@@ -16,7 +19,6 @@ These read-in and data-formatting functions are useful because they are much fas
 library(XLConnect)
 library(MALDIquant)
 library(MALDIquantForeign)
-
 
 ```
 First read-in multi-sheet excel document
@@ -273,10 +275,10 @@ lines(VPI_3.2$rel.intensity~VPI_3.2$m.z, type="l", col="purple")
 
 ```
 ##3.Background subtract noise from raw spectra data
-Does stats to compare peaks between spectra
--not sure what best measure(s) is yet…
+The first step in analyzing MALDI-TOF raw spectra data is to distinguish the
+signal from the noise in the mass spec. readings.
 ```{r}
-
+test<-import("2309_3.1.txt")
 
 
 
