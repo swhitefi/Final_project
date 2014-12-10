@@ -104,16 +104,39 @@ analyzing your data.
 
 ##2.Background subtract noise from raw spectra data
 The first step in analyzing MALDI-TOF raw spectra data is to distinguish the
-signal from the noise in the mass spec. readings.
+signal from the noise in the mass spec. readings. baseline.sub.ms converts a dataframe to a MassSpectrum object, and then does a transformation, smoothing, and baseline estimation. Then it subtracts the baseline from the specta and then plots before and after baseline subtraction, with the baseline denoted by a red line on the plot.
 
 
 ```{r}
-#background subtraction!!
-#import txt files
-require(MALDIquantForeign)
-s<-importTxt("BTS.txt")
-b<-removeBaseline(s, method="SNIP")
-plot(s)
+#These functions use elements of MALDIquant to baseline subtract
+#create MassSpectrum object from dataframe
+baseline.sub.ms<-function(df, name){
+ MSo<-createMassSpectrum(df$m.z, df$intensity, metaData=list(name=paste0(name, " Spectrum"))) 
+# transform intensity to remove variance from the mean
+MSo1<- transformIntensity(MSo, method="sqrt")
+#smooth intensity to smooth the spectra
+MSo2 <- smoothIntensity(MSo1, method="SavitzkyGolay")
+#estimate the baseline noise
+baseline<- estimateBaseline(MSo2, method="SNIP",iterations=150)
+#plot before correction and where the baseline is
+plot(MSo2)
+lines(baseline, col="red", lwd=2)
+#remove the baseline and save this as a global variable
+MSo3<<-removeBaseline(MSo2, method="SNIP",iterations=150)
+#plot resulting spectra
+plot(MSo3)  
+}
+
+
+
+
+
+plot(MSo2)
+lines(baseline, col="red", lwd=2)
+
+MSo3<- removeBaseline(MSo2, method="SNIP",iterations=150)
+           plot(MSo3)
+
 
 ```
 
