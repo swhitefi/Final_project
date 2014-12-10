@@ -1,0 +1,158 @@
+---
+title: "MICRO 612 Final Project: Introducing the FormatMALDI Package"
+author: "Shawn Whitefield"
+date: "December 5, 2014"
+output: html_document
+---
+Description: This package is designed to be used to format MALDI-TOF mass spectrometry data such that it is ready for statistical analysis in R. FormatMALDI provides a pipeline to take data that is measured on the Bruker Microflex machine and is exported from the Flex Analysis software (Bruker Daltonics) as a multi-sheet Microsoft Excel (.xls) document.  
+
+Utility: A multi-sheet Excel document is an easy and fast way to export MALDI-TOF data from multiple samples once the raw spectra are loaded into the Flex Analysis program.
+
+###The FormatMALDI Pipeline: ![](/Users/shawnwhitefield/Desktop/r_class/data_analysis/Final_project/pipeline.png)
+
+##1. Read-in and Format Data
+Converts multi sheet excel document to single data-frame with m/z,intensity,relative intensity, and sample names and ribotype (or another feature) as variables. The multi-sheet excel document is the easiest and fastest way to export spectra data from the Flex Analysis program in the clinical lab. 
+These read-in and data-formatting functions are useful because they are much faster than copying-and pasting columns into new spreadsheets, and this method is less error prone. These are good qualities, especially if you have a target plate with 96 samples. 
+
+```{r}
+#first, load all of the packages/libraries you will need to use this package
+#install.packages("MALDIquant")
+#install.packages("XLConnect")
+#install.packages("MALDIquantForeign")
+library(XLConnect)
+library(MALDIquant)
+library(MALDIquantForeign)
+
+```
+First read-in your multi-sheet excel document:
+```{r}
+#1. Converts multi sheet excel doc to single data-frame with m/z,intensity, 
+#load XLConnect package to read in Excel files
+importWorksheets <- function(file) {
+  # filename: name of Excel file
+  workbook <- loadWorkbook(file)
+  sheet_names <- getSheets(workbook)
+  names(sheet_names) <- sheet_names
+  sheet_list <- lapply(sheet_names, function(.sheet){
+    readWorksheet(object=workbook, .sheet)})
+}
+
+```
+Next, convert all of the sheets from the Excel document into a single list containing all of the spectra from each sample (Excel workbook sheet) as an element of the list. This function returns the list containing spectra called spectra.list to the global environment. It also returns a list of the samples (Excel worksheet headings) that can be referenced for labling and creating dataframes later.
+```{r}
+#This function converts all of the sheets from an excel file as a single list
+#returns a list called spectra.list containing all sheets in excel file to global enironment
+#returns sheet names so user can create dataframes containing peak lists of interest
+Return.spectra.list<-function(file){
+  spectra.list<-importWorksheets(file)
+  spectra.list<-as.vector(spectra.list)
+  spectra.names<<-names(spectra.list)
+  return(spectra.names)
+}
+
+```
+spectra.list is a list that contains all of your spectra.
+The next step is to create dataframes for the spectra that you are interested in. The names are returned in spectra.names from Return.spectra.list in the previous step for your convenience in labeling your files in this step.
+
+```{r}
+# example code, using base R
+
+#   Example.dataframeName<-as.data.frame(spectra.list$'name.in.spectra.names')
+
+```
+Once you have a dataframe containig your spectra, you will want to format your dataframe to eliminate empty rows and columns that were carried over from the Excel sheet. This function takes a dataframe, sample name, and another feature as arguments and deletes unnecessary rows and columns.
+
+The feature argument is used to apply another variable to your dataframe, and assign all of the rows the same value for that feature.  For example in a study of *Clostridium difficile* you may want add the strain ribotype to your dataframe. You can change the variable name of the feature in later steps using base R. 
+```{r}
+#function to format data so that dataframe contains only m/z time and intensity
+#takes dataframe and sample name (can be different than dataframe name)
+#as argument and deletes unnecessary info
+
+format.spectra.df<-function(data.frame, sample, feature){
+  data.frame<-data.frame[ ,-c(4:7,9:11)] #remove columns that aren't needed
+  data.frame<-data.frame[-c(1:2), ] #remove rows that aren't needed
+  names(data.frame)<-NULL #delete the variable names since they are wrong
+  colnames(data.frame)<-c("m/z","time","intensity","rel.intensity") #rename
+  data.frame$sample<-sample #make put the sample name in the sample column
+  data.frame$feature<-feature #add the ribotype or other feature
+  write.table(data.frame,file=(paste0(sample, ".txt"))) #write this to a txt file in working directory
+}
+
+```
+Now you will have a separate .txt file in your working directory for each sample that you want to analyze. The next step is to bring the files back in as dataframes so that you can analyze them in R.  
+```{r}
+#using base R
+#bring .txt files of samples back in as dataframes.
+#example code:
+#   example.data.frame.name<-read.table(file="filename.txt", header=T)
+
+
+```
+If you would like to combine all of your spectra data frames into a single dataframe, you can use the following code below
+```{r}
+#using base R
+#merge all dataframes to one big dataframe with the variables of interest
+#example code:
+#   example.data.frame.name.all.spectra.df<-rbind(data.frame.names)
+```
+Congrats! Your dataframes are now formatted in a way that makes sense, and the data are ready for you to make plots and/or run statistics. However, if you exported your data from Flex Analysis without background subtraction, you will want to go to step 2. below to perform background subtraction manually before
+analyzing your data.  
+
+
+##2.Background Subtract Noise From Raw Spectra Data
+The first step in analyzing MALDI-TOF raw spectra data is to distinguish the
+signal from the noise in the mass spec. readings. baseline.sub.ms takes a dataframe the name you want to call your spectra as arguments. Then, baseline.sub.ms converts a dataframe to a MassSpectrum object, and then does a transformation, smoothing, and baseline estimation. Then it subtracts the baseline from the specta and then plots before and after baseline subtraction, with the baseline denoted by a red line on the plot.The baseline corrected spectra are saved as a MassSpectrum class object called MSo3.
+
+After baseline subtraction, you may want to export your data to a new file. export.msO exports a MassSpectrum class object to a .csv file.  It takes the arguments of a MassSpectrum object, and a string that you want to name your file.
+
+
+```{r}
+#These functions use elements of MALDIquant to baseline subtract
+#create MassSpectrum object from dataframe
+
+baseline.sub.ms<-function(df, name){
+ MSo<-createMassSpectrum(df$m.z, df$intensity, metaData=list(name=paste0(name, " Spectrum"))) 
+# transform intensity to remove variance from the mean
+MSo1<- transformIntensity(MSo, method="sqrt")
+#smooth intensity to smooth the spectra
+MSo2 <- smoothIntensity(MSo1, method="MovingAverage")
+#estimate the baseline noise
+baseline<- estimateBaseline(MSo2, method="SNIP",iterations=150)
+#plot before correction and where the baseline is
+plot(MSo2)
+lines(baseline, col="red", lwd=2)
+#remove the baseline and save this as a global variable
+MSo3<<-removeBaseline(MSo2, method="SNIP",iterations=150)
+#plot resulting spectra
+plot(MSo3)  
+}
+
+##you can use the following function to export this result to a .csv file
+##arguments are a massspectrum class object and a file to export to
+
+export.msO<-function(msobject, file){
+  export(msobject, file=paste0(file,".csv"))
+}
+
+##you may want to bring this correted file back in as a dataframe for futher analysis.  Note this file will not contain ribotype or any other variables other than m.z and intenstiy. 
+
+#   example.data.frame.name<-read.table(file="filename.txt", header=T)
+
+```
+
+##3.Quickly Plot Intensity by m.z
+These two functions can be used to quickly plot your spectra to get a rough idea of what your data looks like. 
+plot.spectra.rel.intens offers a pre-formatted m/z by relative intensity plot. Plot.spectra.intens similarly returns a pre-formatted m/z by intensity plot. 
+These functions are usefull to see your data quickly.
+
+```{r}
+
+plot.spectra.rel.intens<-function(df=data.frame) {
+plot(df$rel.intensity~df$m.z, type="l", main="Relative Intensity by M/Z", xlab="M/Z", ylab="Relative Intensity" , xlim=c(2000,13000), ylim=c(0,1),col="black")
+}
+
+Plot.spectra.intens<-function(df=data.frame) {
+plot(df$intensity~df$m.z, type="l", main="Intensity by M/Z", xlab="M/Z", ylab="Intensity" , xlim=c(2000,13000), ylim=c(0,15000),col="black")
+}
+
+```
