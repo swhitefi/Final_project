@@ -96,9 +96,10 @@ Congrats! Your dataframes are now formatted in a way that makes sense, and the d
 #  example.data.frame.name.all.spectra.df<-rbind(data.frame.names)
 
 ```
-##2.Plots intensity by m/z
-These functions can be used to quickly plot your spectra to get a rough idea of what your data looks like. 
-plot.spectra.rel.intens offers a pre-formatted m/z by relative intensity plot. Plot.spectra.intens similarly returns a pre-formatted m/z by intensity plot. These functions are usefull to see your data quickly.
+##3.Plots intensity by m/z
+These two functions can be used to quickly plot your spectra to get a rough idea of what your data looks like. 
+plot.spectra.rel.intens offers a pre-formatted m/z by relative intensity plot. Plot.spectra.intens similarly returns a pre-formatted m/z by intensity plot. 
+These functions are usefull to see your data quickly.
 
 ```{r}
 
@@ -109,49 +110,6 @@ plot(df$rel.intensity~df$m.z, type="l", main="Relative Intensity by M/Z", xlab="
 Plot.spectra.intens<-function(df=data.frame) {
 plot(df$intensity~df$m.z, type="l", main="Intensity by M/Z", xlab="M/Z", ylab="Intensity" , xlim=c(2000,13000), ylim=c(0,15000),col="black")
 }
-
-#####
-Plot.spectra.intens(BTS)
-plot.spectra.rel.intens()
-plot.spectra.rel.intens(BTS)
-#overlay other 027s
-#2398
-lines(s2398_1.2$rel.intensity~s2398_1.2$m.z, type="l", col="red")
-lines(s2398_1.1$rel.intensity~s2398_1.1$m.z, type="l", col="red")
-lines(s2398_3.1$rel.intensity~s2398_3.1$m.z, type="l", col="red")
-#R20291
-lines(R20291_2.1$rel.intensity~R20291_2.2$m.z, type="l", col="red")
-lines(R20291_2.2$rel.intensity~R20291_2.2$m.z, type="l", col="red")
-
-#overlay F200 non-tox strain
-lines(F200_1.1$rel.intensity~F200_1.1$m.z, type="l", col="green")
-lines(F200_1.2$rel.intensity~F200_1.2$m.z, type="l", col="green")
-lines(F200_2.1$rel.intensity~F200_2.1$m.z, type="l", col="green")
-lines(F200_2.2$rel.intensity~F200_2.2$m.z, type="l", col="green")
-lines(F200_3.1$rel.intensity~F200_3.1$m.z, type="l", col="green")
-lines(F200_3.2$rel.intensity~F200_3.2$m.z, type="l", col="green")
-
-#630
-lines(s630_1.1$rel.intensity~s630_1.1$m.z, type="l", col="blue")
-lines(s630_1.2$rel.intensity~s630_1.2$m.z, type="l", col="blue")
-lines(s630_2.1$rel.intensity~s630_2.1$m.z, type="l", col="blue")
-lines(s630_2.2$rel.intensity~s630_2.2$m.z, type="l", col="blue")
-lines(s630_3.1$rel.intensity~s630_3.1$m.z, type="l", col="blue")
-lines(s630_3.2$rel.intensity~s630_3.2$m.z, type="l", col="blue")
-#712
-lines(s712_1.1$rel.intensity~s712_1.1$m.z, type="l", col="orange")
-lines(s712_2.1$rel.intensity~s712_2.1$m.z, type="l", col="orange")
-lines(s712_2.2$rel.intensity~s712_2.2$m.z, type="l", col="orange")
-lines(s712_3.1$rel.intensity~s712_3.1$m.z, type="l", col="orange")
-lines(s712_3.2$rel.intensity~s712_3.2$m.z, type="l", col="orange")
-
-#VPI
-lines(VPI_1.1$rel.intensity~VPI_1.1$m.z, type="l", col="purple")
-lines(VPI_1.2$rel.intensity~VPI_1.2$m.z, type="l", col="purple")
-lines(VPI_2.1$rel.intensity~VPI_2.1$m.z, type="l", col="purple")
-lines(VPI_2.2$rel.intensity~VPI_2.2$m.z, type="l", col="purple")
-lines(VPI_3.1$rel.intensity~VPI_3.1$m.z, type="l", col="purple")
-lines(VPI_3.2$rel.intensity~VPI_3.2$m.z, type="l", col="purple")
 
 ```
 ##3.Background subtract noise from raw spectra data
