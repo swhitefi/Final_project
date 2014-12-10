@@ -8,7 +8,7 @@ Description: This package is designed to be used to format MALDI-TOF mass spectr
 
 Utility: A multi-sheet Excel document is an easy and fast way to export MALDI-TOF data from multiple samples once the raw spectra are loaded into the Flex Analysis program.
 
-###The FormatMALDI Pipeline: image: ![](path/to/smallorb.png)
+###The FormatMALDI Pipeline: 
 
 ##1. Read-in and Format Data
 Converts multi sheet excel document to single data-frame with m/z,intensity,relative intensity, and sample names and ribotype (or another feature) as variables. The multi-sheet excel document is the easiest and fastest way to export spectra data from the Flex Analysis program in the clinical lab. 
@@ -16,9 +16,9 @@ These read-in and data-formatting functions are useful because they are much fas
 
 ```{r}
 #first, load all of the packages/libraries you will need to use this package
-install.packages("MALDIquant")
-install.packages("XLConnect")
-install.packages("MALDIquantForeign")
+#install.packages("MALDIquant")
+#install.packages("XLConnect")
+#install.packages("MALDIquantForeign")
 library(XLConnect)
 library(MALDIquant)
 library(MALDIquantForeign)
@@ -104,7 +104,7 @@ analyzing your data.
 
 ##2.Background subtract noise from raw spectra data
 The first step in analyzing MALDI-TOF raw spectra data is to distinguish the
-signal from the noise in the mass spec. readings. baseline.sub.ms converts a dataframe to a MassSpectrum object, and then does a transformation, smoothing, and baseline estimation. Then it subtracts the baseline from the specta and then plots before and after baseline subtraction, with the baseline denoted by a red line on the plot.
+signal from the noise in the mass spec. readings. baseline.sub.ms takes a dataframe the name you want to call your spectra as arguments. Then, baseline.sub.ms converts a dataframe to a MassSpectrum object, and then does a transformation, smoothing, and baseline estimation. Then it subtracts the baseline from the specta and then plots before and after baseline subtraction, with the baseline denoted by a red line on the plot.
 
 
 ```{r}
@@ -127,15 +127,10 @@ MSo3<<-removeBaseline(MSo2, method="SNIP",iterations=150)
 plot(MSo3)  
 }
 
+baseline.sub.ms(F200_1.1, "F200")
 
+#now export as a dataframe from ms object
 
-
-
-plot(MSo2)
-lines(baseline, col="red", lwd=2)
-
-MSo3<- removeBaseline(MSo2, method="SNIP",iterations=150)
-           plot(MSo3)
 
 
 ```
