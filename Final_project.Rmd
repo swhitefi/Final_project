@@ -50,55 +50,13 @@ Return.spectra.list<-function(file){
 ###
 Return.spectra.list("11-20-2014_SEW.xls")
 ```
-The next step is to create dataframes for the spectra that you are interested in. The names are returned for your convenience in labeling your files
+spectra.list is a list that contains all of your spectra.
+The next step is to create dataframes for the spectra that you are interested in. The names are returned in spectra.names from Return.spectra.list in the previous step for your convenience in labeling your files in this step.
 
 ```{r}
-# example code, not in a function
+# example code, using base R
 
-#create dataframes for spectra of interest
-#could try to turn this into a function, 
-#make.spectra.df<-function(list, sample) {
-  #list<<-as.data.frame(list$(paste('sample')))
- # }
-
-#not sure if that would be too hard with data frame naming scheme
-#examples of how to do it manually w/out function
-#control BTS
-BTS<-as.data.frame(spectra.list$'BTS_0_A9_1')
-#strain 2398
-s2398_1.1<-as.data.frame(spectra.list$'2398_1-1_0_A5_1')
-s2398_1.2<-as.data.frame(spectra.list$'2398_1-2_0_B5_1')
-s2398_3.1<-as.data.frame(spectra.list$'2398_3-1_0_E5_1')
-#strain 630g
-s630_1.1<-as.data.frame(spectra.list$'630_1-1_0_A6_1')
-s630_2.1<-as.data.frame(spectra.list$'630_2-1_0_C6_1')
-s630_2.2<-as.data.frame(spectra.list$'630_2-2_0_D6_1')
-s630_3.1<-as.data.frame(spectra.list$'630_3-1_0_E6_1')
-s630_3.2<-as.data.frame(spectra.list$'630_3-2_0_F6_1')
-#strain VPI
-VPI_1.1<-as.data.frame(spectra.list$'VPI_1-1_0_A2_1')
-VPI_1.2<-as.data.frame(spectra.list$'VPI_1-2_0_B2_1')
-VPI_2.1<-as.data.frame(spectra.list$'VPI_2-1_0_C2_1')
-VPI_2.2<-as.data.frame(spectra.list$'VPI_2-2_0_D2_1')
-VPI_3.1<-as.data.frame(spectra.list$'VPI_3-1_0_E2_1')
-VPI_3.2<-as.data.frame(spectra.list$'VPI_3-2_0_F2_1')
-#strain F200
-F200_1.1<-as.data.frame(spectra.list$'F200_1-1_0_A1_1')
-F200_1.2<-as.data.frame(spectra.list$'F2001-2_0_B1_1')
-F200_2.1<-as.data.frame(spectra.list$'F200_2-1_0_C1_1')
-F200_2.2<-as.data.frame(spectra.list$'F200_2-2_0_D1_1')
-F200_3.1<-as.data.frame(spectra.list$'F200_3-1_0_E1_1')
-F200_3.2<-as.data.frame(spectra.list$'F200_3-2_0_F1_1')
-#strain R20291
-R20291_2.1<-as.data.frame(spectra.list$'R20291_2-1_0_C3_1')
-R20291_2.2<-as.data.frame(spectra.list$'R20291_2-2_0_D3_1')
-#strain 712
-s712_1.1<-as.data.frame(spectra.list$'712_1-1_0_A4_1')
-s712_1.2<-as.data.frame(spectra.list$'712_1-2_0_B4_1')
-s712_2.1<-as.data.frame(spectra.list$'712_2-1_0_C4_1')
-s712_2.2<-as.data.frame(spectra.list$'712_2-2_0_D4_1')
-s712_3.1<-as.data.frame(spectra.list$'712_3-1_0_E4_1')
-s712_3.2<-as.data.frame(spectra.list$'712_3-2_0_F4_1')
+# Example.dataframeName<-as.dataframe(spectra.list$'name.in.spectra.names')
 
   
 ```
