@@ -1,0 +1,8 @@
+Package: FormatMALDI
+Title: A pipeline to format MALDI-TOF data from a multi-sheet Excel document
+Version: 0.1
+Authors@R: "Shawn Whitefield <swhitefi@umich.edu> [aut, cre]"
+Description:This package is designed to be used to format MALDI-TOF mass spectrometry data such that it is ready for statistical analysis in R. FormatMALDI provides a pipeline to take data that is measured on the Bruker Microflex machine and is exported from the Flex Analysis software (Bruker Daltonics) as a multi-sheet Microsoft Excel (.xls) document.
+Depends: R (>= 3.1.1)
+License: GNU GENERAL PUBLIC LICENSE
+LazyData: true
