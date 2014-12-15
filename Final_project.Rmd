@@ -105,7 +105,7 @@ signal from the noise in the mass spec. readings. baseline.sub.ms takes a datafr
 
 After baseline subtraction, you may want to export your data to a new file. export.msO exports a MassSpectrum class object to a .csv file.  It takes the arguments of a MassSpectrum object, and a string that you want to name your file.
 
-
+IMPORTANT NOTE: 12/14/2014 The spectra in the example set will appear skewed once this baseline subtraction method is applied. This is probably due to the method of baseline subtraction and smoothing in combination with the way that I exported the data (both of which I am still playing around with).  I do not have access to another data-set (yet) from Flex Analysis that is formatted for the above functions, but I will add one, or edit the baseline subtraction methods in this package when I have it figured out. Until then, probably don't trust these plots, this function is a work in progress.
 ```{r}
 #These functions use elements of MALDIquant to baseline subtract
 #create MassSpectrum object from dataframe
